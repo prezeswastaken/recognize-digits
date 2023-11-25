@@ -71,7 +71,7 @@ def index():
                 image=image_base64,
             )
 
-    return render_template("index.html", prediction=None, image=None)
+    return render_template("index.html", prediction="I am waiting...", image=None)
 
 
 if __name__ == "__main__":
