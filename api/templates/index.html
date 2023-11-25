@@ -7,7 +7,16 @@
 </head>
 <body>
     <h1>{{ prediction }}</h1>
-    <img src="data:image/png;base64,{{ image }}" alt="Image">
+
+    <form method="post" enctype="multipart/form-data">
+        <label for="file">Choose a PNG or JPEG file:</label>
+        <input type="file" name="file" accept=".png, .jpg, .jpeg" required>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if image %}
+        <img src="data:image/png;base64,{{ image }}" alt="Image">
+    {% endif %}
 </body>
 </html>
 

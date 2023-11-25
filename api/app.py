@@ -1,3 +1,5 @@
+from flask import Flask, render_template, request
+import numpy as np
 from PIL import Image
 from torchvision.transforms import ToTensor
 from flask import Flask, render_template
@@ -43,26 +45,33 @@ test_data = datasets.MNIST(
 )
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    data, target = random.choice(test_data)
-    data = data.unsqueeze(0).to(device)
-    output = model(data)
-    prediction = output.argmax(dim=1, keepdim=True).item()
+    if request.method == "POST":
+        # Handle file upload
+        file = request.files["file"]
+        if file and file.filename.lower().endswith((".png", ".jpg", ".jpeg")):
+            # Read the uploaded file
+            pil_image = Image.open(file).convert("L")  # Convert to grayscale
+            pil_image = pil_image.resize((28, 28))  # Resize to MNIST input size
+            data = ToTensor()(pil_image).unsqueeze(0).to(device)
 
-    image = data.squeeze(0).squeeze(0).cpu().numpy()
+            # Make prediction
+            output = model(data)
+            prediction = output.argmax(dim=1, keepdim=True).item()
 
-    # Convert NumPy array to PIL Image
-    pil_image = Image.fromarray((image * 255).astype("uint8"))
+            # Convert PIL Image to base64
+            buffered = io.BytesIO()
+            pil_image.save(buffered, format="PNG")
+            image_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-    # Convert the PIL Image to base64
-    buffered = io.BytesIO()
-    pil_image.save(buffered, format="PNG")
-    image_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            return render_template(
+                "index.html",
+                prediction=f"I guess this is {prediction}",
+                image=image_base64,
+            )
 
-    return render_template(
-        "index.html", prediction=f"I guess this is {prediction}", image=image_base64
-    )
+    return render_template("index.html", prediction=None, image=None)
 
 
 if __name__ == "__main__":
