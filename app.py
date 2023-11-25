@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import random
 import io
 import base64
+from responses import responses
 
 app = Flask(__name__)
 
@@ -67,7 +68,7 @@ def index():
 
             return render_template(
                 "index.html",
-                prediction=f"I guess this is {prediction}",
+                prediction=f"{random.choice(responses)} {prediction}",
                 image=image_base64,
             )
 
@@ -75,4 +76,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

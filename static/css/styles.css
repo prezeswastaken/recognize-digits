@@ -428,6 +428,9 @@ video {
 .h-screen {
   height: 100vh;
 }
+.w-1\/2 {
+  width: 50%;
+}
 .w-60 {
   width: 15rem;
 }
@@ -443,11 +446,14 @@ video {
 .gap-10 {
   gap: 2.5rem;
 }
+.self-end {
+  align-self: flex-end;
+}
 .rounded-xl {
   border-radius: 0.75rem;
 }
-.border {
-  border-width: 1px;
+.border-2 {
+  border-width: 2px;
 }
 .border-white {
   --tw-border-opacity: 1;
@@ -487,6 +493,9 @@ video {
 }
 .duration-300 {
   transition-duration: 300ms;
+}
+.hover\:w-full:hover {
+  width: 100%;
 }
 .hover\:border-green-500:hover {
   --tw-border-opacity: 1;
